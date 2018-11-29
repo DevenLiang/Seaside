@@ -11,7 +11,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     public static String TAG = MainActivity.class.getSimpleName();
     @BindView(android.R.id.tabcontent)
     FrameLayout tabcontent;
@@ -25,9 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-//        TextView SampleText = findViewById(R.id.sample_text);
-//        SampleText.setText(stringFromJNI());
-//        SampleText.setOnClickListener(this);
     }
 
 
@@ -36,15 +33,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public native String stringFromJNI();
-
-    @Override
-    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.sample_text:
-//                Toast.makeText(this, "被点击了！！", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(this, MainActivity4.class);
-//                startActivity(intent);
-//                break;
-//        }
-    }
 }
