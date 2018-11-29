@@ -2,7 +2,7 @@
 #include <string>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_seaside_MainActivity4_stringFromJNI(
+Java_com_seaside_ui_MainActivity4_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++";
@@ -10,7 +10,7 @@ Java_com_seaside_MainActivity4_stringFromJNI(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_seaside_MainActivity_stringFromJNI(
+Java_com_seaside_ui_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++!!!!!";

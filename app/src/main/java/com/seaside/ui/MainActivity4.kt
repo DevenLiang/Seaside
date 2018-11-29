@@ -1,9 +1,14 @@
-package com.seaside
+package com.seaside.ui
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v7.app.AppCompatActivity
+import com.seaside.R
 
+/**
+ * Createed by Deven
+ * on 2018/11/28.
+ * Descibe: TODO:
+ */
 class MainActivity4 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,7 +16,7 @@ class MainActivity4 : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Example of a call to a native method
-        sample_text.text = stringFromJNI()
+//        sample_text.text = stringFromJNI()
     }
 
     /**
