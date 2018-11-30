@@ -4,6 +4,23 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+//读取签名配置文件
+def getSigningProperties() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    if (properties != null && properties.containsKey('storePassword') && properties.containsKey('keyPassword')) {
+        android.signingConfigs.release.storePassword = properties['storePassword']
+        android.signingConfigs.release.keyPassword = properties['keyPassword']
+        android.signingConfigs.debug.storePassword = properties['storePassword']
+        android.signingConfigs.debug.keyPassword = properties['keyPassword']
+    }
+}
+
+//获取时间
+static def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 android {
     compileSdkVersion 28
     useLibrary 'org.apache.http.legacy'
@@ -19,6 +36,7 @@ android {
                 cppFlags ""
             }
         }
+
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
@@ -33,13 +51,53 @@ android {
             }
         }
     }
-    buildTypes {
+
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            storeFile file('C:\\Users\\seaside.jks')
+            storePassword
+            keyAlias "seaside"
+            keyPassword
+        }
+        debug {
+            storeFile file('C:\\Users\\seaside.jks')
+            storePassword
+            keyAlias "seaside"
+            keyPassword
         }
     }
+    getSigningProperties()
+    buildTypes {
 
+        debug {
+            minifyEnabled false
+            //压缩对齐，提高运行时的效率，也可以使用zipAlignEnabled true
+            zipAlignEnabled true
+            //可以调试
+            debuggable true
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            //可以调试
+            debuggable true
+            //压缩对齐，提高运行时的效率，也可以使用zipAlignEnabled true
+            zipAlignEnabled true
+            //是否移除无用资源
+            zipAlignEnabled true
+            //指定签名文件为release签名，注意非debug，如果不指定签名，则打出来的包不会签名
+            signingConfig signingConfigs.release
+            //自定义apk名字
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "MTC_${defaultConfig.versionName}_${releaseTime()}_release.apk"
+                }
+            }
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //是否混淆
+            minifyEnabled false
+        }
+    }
 
     externalNativeBuild {
         cmake {
@@ -49,7 +107,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
@@ -57,37 +115,27 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     //黄油刀
     implementation 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.jakewharton:butterknife-annotations:8.8.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
-
-
     //dagger2
     implementation 'com.google.dagger:dagger-android:2.15'
     implementation 'com.google.dagger:dagger-android-support:2.14.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.14.1'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.14.1'
-
     //java注解
     implementation 'org.glassfish:javax.annotation:10.0-b28'
-
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-
     // 衔接 Retrofit & RxJava
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-
     // Retrofit支持Gson解析
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-
     //拦截器
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation 'net.danlew:android.joda:2.9.3'
-
     //rxJava rxAndroid
     implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-
 }
