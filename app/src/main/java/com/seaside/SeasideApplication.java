@@ -1,6 +1,7 @@
 package com.seaside;
 
 import android.app.Application;
+import cn.jpush.android.api.JPushInterface;
 import com.seaside.di.components.DaggerNetComponent;
 import com.seaside.di.components.NetComponent;
 import com.seaside.di.modules.NetModule;
@@ -33,6 +34,8 @@ public class SeasideApplication extends Application {
         //转换类
         DensityUtil.init(this);
         initNet();
+
+        JPushInterface.setAlias(this, 1, "DevenL");
     }
 
     @Override
