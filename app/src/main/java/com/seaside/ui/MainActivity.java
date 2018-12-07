@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,8 +12,14 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.seaside.R;
+import com.seaside.SeasideApplication;
+import com.seaside.di.components.DaggerMainComponent;
+import com.seaside.presenter.MainPresenter;
 import com.seaside.ui.fragment.ChatFragment;
 import com.seaside.ui.fragment.ContactsFragment;
+import retrofit2.Retrofit;
+
+import javax.inject.Inject;
 
 /**
  * Createed by Deven
@@ -32,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private String[] tabTag = {"chat", "contacts"};
     private String[] tabName = {"聊天", "联系人"};
     private Class[] fragments = {ChatFragment.class, ContactsFragment.class};
+    @Inject
+    Retrofit mRetrofit;
+    @Inject
+    MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
+        DaggerMainComponent.builder().appComponent(((SeasideApplication)getApplication()).getAppComponent())
+                .build().inject(this);
+        Log.w("AMainActivity","mRetrofit =" + mRetrofit.toString());
+        Log.w("AMainActivity", "mainPresenter = " +mainPresenter.toString());
     }
 
     private void initView() {

@@ -50,7 +50,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+
+        <activity android:name=".ui.MainActivity"/>
+        <activity android:name=".ui.permissions.PermissionsActivity"/>
+        <activity android:name=".ui.permissions.RequestPermissionsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -59,8 +62,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MainActivity4"/>
-        <!-- 第三方sdk -->
 
+
+
+
+        <!-- 第三方sdk -->
 
         <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->

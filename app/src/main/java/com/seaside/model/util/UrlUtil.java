@@ -6,5 +6,5 @@ package com.seaside.model.util;
  * Descibe: TODO:
  */
 public class UrlUtil {
-    public static String HTPPS_URL = "www.baidu.com";
+    public static String HTPPS_URL = "https:\\www.baidu.com";
 }

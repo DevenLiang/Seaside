@@ -2,9 +2,10 @@ package com.seaside;
 
 import android.app.Application;
 import cn.jpush.android.api.JPushInterface;
-import com.seaside.di.components.DaggerNetComponent;
-import com.seaside.di.components.NetComponent;
-import com.seaside.di.modules.NetModule;
+import cn.jpush.im.android.api.JMessageClient;
+import com.seaside.di.components.AppComponent;
+import com.seaside.di.components.DaggerAppComponent;
+import com.seaside.model.util.UrlUtil;
 import com.seaside.utils.AppManager;
 import com.seaside.utils.CrashHandler;
 import com.seaside.utils.DUtils;
@@ -35,6 +36,11 @@ public class SeasideApplication extends Application {
         DensityUtil.init(this);
         initNet();
 
+        JMessageClient.setDebugMode(true);
+        JMessageClient.init(this);
+
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
         JPushInterface.setAlias(this, 1, "DevenL");
     }
 
@@ -48,15 +54,16 @@ public class SeasideApplication extends Application {
         super.onTerminate();
     }
 
-    private NetComponent netComponent;
+    private AppComponent mAppComponent;
 
     private void initNet() {
-        netComponent = DaggerNetComponent.builder()
-                .netModule(new NetModule())
+        mAppComponent = DaggerAppComponent.builder()
+                .application(this)
+                .baseUrl(UrlUtil.HTPPS_URL)
                 .build();
     }
 
-    public NetComponent getNetComponent() {
-        return netComponent;
+    public AppComponent getAppComponent() {
+        return mAppComponent;
     }
 }

@@ -4,10 +4,10 @@ import com.seaside.BuildConfig;
 import com.seaside.model.api.ApiService;
 import com.seaside.model.api.StringConverterFactory;
 import com.seaside.model.util.EntityUtils;
-import com.seaside.model.util.UrlUtil;
 import com.seaside.utils.DUtils;
 import dagger.Module;
 import dagger.Provides;
+import dagger.Reusable;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,7 +17,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -30,10 +29,24 @@ import java.util.concurrent.TimeUnit;
  */
 @Module
 public class NetModule {
+
+//    @Provides
+//    @Singleton
+//    Cache provideOkHttpCache(Application application) {
+//        int cacheSize = 10 * 1024 * 1024; // 10 MiB
+//        return new Cache(application.getCacheDir(), cacheSize);
+//    }
+/*
+    String mBaseUrl;
+
+    // 构造module所需要的参数。根据每个人的情况而定
+    public NetModule(String baseUrl) {
+        this.mBaseUrl = baseUrl;
+    }*/
     @Provides
-    @Singleton
-    public OkHttpClient provideOkHttpClient() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor((HttpLoggingInterceptor.Logger) message -> {
+    @Reusable
+    HttpLoggingInterceptor provideOkHttpHttpLoggingInterceptor() {
+        return new HttpLoggingInterceptor(message -> {
             try {
                 DUtils.eLog("Http_Response ===>>>" + URLDecoder.decode(message, "utf-8"));
             } catch (UnsupportedEncodingException e) {
@@ -41,8 +54,14 @@ public class NetModule {
                 DUtils.eLog("Http_Response ===>>>" + message);
             }
         });
+    }
+
+    @Provides
+    @Reusable
+    public OkHttpClient provideOkHttpClient(HttpLoggingInterceptor loggingInterceptor) {
         loggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
         return new OkHttpClient.Builder()
+//                .cache(cache)
 //                .sslSocketFactory(createSSLSocketFactory())
 //                .sslSocketFactory(HttpsUtils.createSSLSocketFactory(), new HttpsUtils.TrustAllCerts())
 //                .hostnameVerifier(new HttpsUtils.TrustAllHostnameVerifier())
@@ -72,11 +91,12 @@ public class NetModule {
     }
 
     @Provides
-    @Singleton
-    public Retrofit provideRetrofit(OkHttpClient okhttpClient) {
+    @Reusable
+    public Retrofit provideRetrofit(OkHttpClient okhttpClient,String mBaseUrl) {
         return new Retrofit.Builder()
                 .client(okhttpClient)
-                .baseUrl(UrlUtil.HTPPS_URL)
+//                .baseUrl(UrlUtil.HTPPS_URL)
+                .baseUrl(mBaseUrl)
                 .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(EntityUtils.gson))//
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -84,7 +104,7 @@ public class NetModule {
     }
 
     @Provides
-    @Singleton
+    @Reusable
     public ApiService provideApiService(Retrofit retrofit) {
         return retrofit.create(ApiService.class);
     }
