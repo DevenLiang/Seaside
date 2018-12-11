@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         Log.w("AMainActivity","mRetrofit =" + mRetrofit.toString());
         Log.w("AMainActivity", "mainPresenter = " +mainPresenter.toString());
 
+
     }
 
     private void initView() {
