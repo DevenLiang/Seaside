@@ -1,6 +1,8 @@
 package com.seaside;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import com.seaside.di.components.AppComponent;
@@ -61,6 +63,12 @@ public class SeasideApplication extends Application {
                 .application(this)
                 .baseUrl(UrlUtil.HTPPS_URL)
                 .build();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public AppComponent getAppComponent() {

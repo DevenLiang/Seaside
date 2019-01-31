@@ -98,7 +98,7 @@ public class NetModule {
 //                .baseUrl(UrlUtil.HTPPS_URL)
                 .baseUrl(mBaseUrl)
                 .addConverterFactory(StringConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(EntityUtils.gson))//
+                .addConverterFactory(GsonConverterFactory.create(EntityUtils.gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
